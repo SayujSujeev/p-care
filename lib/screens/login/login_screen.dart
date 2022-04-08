@@ -72,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: appPadding * 2, vertical: appPadding / 2),
                 decoration: BoxDecoration(
-                  color: green,
+                  color: black,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: const Text('Login',style: TextStyle(
