@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:palitive_care/constants/constants.dart';
 import 'package:palitive_care/screens/home/home_screen.dart';
-
+import 'package:palitive_care/services/shared_preferance.dart';
+import 'package:get/get.dart';
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -10,6 +12,10 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final TextEditingController _emailController=TextEditingController();
+  final TextEditingController _passwordController=TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -47,13 +53,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: size.height * 0.04,
                 ),
-                const TextField(
-                  decoration: InputDecoration(hintText: 'Email'),
+                 TextField(
+                  controller:_emailController ,
+                  decoration: const InputDecoration(hintText: 'Email'),
                 ),
                 SizedBox(
                   height: size.height * 0.04,
                 ),
-                const TextField(
+                 TextField(
+                  controller: _passwordController,
                   obscureText: true,
                   decoration: InputDecoration(hintText: 'Password'),
                 ),
@@ -66,9 +74,24 @@ class _LoginScreenState extends State<LoginScreen> {
 
           Center(
             child: InkWell(
-              onTap: (){
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomeScreen(),),);
-              },
+              onTap: ()async{
+                try{
+                  await _auth.signInWithEmailAndPassword(email:_emailController.text , password: _passwordController.text);
+                  SharedPreferanceClass.saveUserLoggedInSharedPreference(true);
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomeScreen(),),);
+                }
+                catch(e){
+                  Get.snackbar("Invalid User", "User entered is not valid",
+                    backgroundColor: Colors.red,
+                    messageText: const Text("User entered is not valid",style: TextStyle(color: white),),
+                    titleText: const Text("Invalid User",style: TextStyle(color: white,fontWeight: FontWeight.w500),),
+                  );
+                }
+
+
+                }
+
+              ,
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: appPadding * 2, vertical: appPadding / 2),
                 decoration: BoxDecoration(

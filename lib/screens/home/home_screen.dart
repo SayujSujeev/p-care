@@ -1,13 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:palitive_care/constants/constants.dart';
 import 'package:palitive_care/data/category_data.dart';
 import 'package:palitive_care/data/today_doctor_data.dart';
 import 'package:palitive_care/data/top_doctors_data.dart';
 import 'package:palitive_care/screens/activities/activities_screen.dart';
+import 'package:palitive_care/screens/login/login_screen.dart';
 import 'package:palitive_care/screens/med_bank/med_bank_screen.dart';
 import 'package:palitive_care/screens/messages/message_screen.dart';
 import 'package:palitive_care/screens/payment/payment_screen.dart';
 import 'package:palitive_care/screens/services/services_screen.dart';
+import 'package:palitive_care/services/database_services.dart';
+import 'package:palitive_care/services/shared_preferance.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -17,6 +21,22 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  Stream? topDoctorList;
+  getDoctorList() async {
+    await DatabaseServices().getDoctorList().then((value) {
+      setState(() {
+        topDoctorList = value;
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getDoctorList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +50,15 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const LoginScreen(),
+                ),
+              );
+              SharedPreferanceClass.saveUserLoggedInSharedPreference(false);
+            },
             icon: const Icon(
               Icons.person,
               color: black,
@@ -57,24 +85,49 @@ class _HomeScreenState extends State<HomeScreen> {
                           Container(
                             child: IconButton(
                               onPressed: () {
-                                if(index == 0){
-                                  Navigator.push(context, MaterialPageRoute(builder: (_) => const ServicesScreen(),),);
+                                if (index == 0) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => const ServicesScreen(),
+                                    ),
+                                  );
                                 }
 
-                                if(index == 1){
-                                  Navigator.push(context, MaterialPageRoute(builder: (_) => const MessagesScreen(),),);
+                                if (index == 1) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => const MessagesScreen(),
+                                    ),
+                                  );
                                 }
 
-                                if(index == 2){
-                                  Navigator.push(context, MaterialPageRoute(builder: (_) => const PaymentScreen(),),);
+                                if (index == 2) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => const PaymentScreen(),
+                                    ),
+                                  );
                                 }
 
-                                if(index == 3){
-                                  Navigator.push(context, MaterialPageRoute(builder: (_) => const MedBankScreen(),),);
+                                if (index == 3) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => const MedBankScreen(),
+                                    ),
+                                  );
                                 }
 
-                                if(index == 4){
-                                  Navigator.push(context, MaterialPageRoute(builder: (_) => const ActivitiesScreen(),),);
+                                if (index == 4) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => const ActivitiesScreen(),
+                                    ),
+                                  );
                                 }
                               },
                               icon: Icon(
@@ -249,82 +302,120 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(appPadding),
-              child: ListView.builder(
-                itemCount: topDoctorsList.length,
-                physics: const NeverScrollableScrollPhysics(),
-                padding: const EdgeInsets.only(bottom: appPadding),
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: appPadding / 2),
-                    child: Container(
-                      height: 80,
-                      decoration: BoxDecoration(
-                        color: white,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                              color: black.withOpacity(0.3),
-                              offset: const Offset(5, 5),
-                              blurRadius: 10)
-                        ],
-                      ),
-                      padding: const EdgeInsets.all(appPadding / 2),
-                      child: Row(
-                        children: [
-                          ClipRRect(
-                            child: Image.asset(
-                              topDoctorsList[index].image,
-                              height: 80,
-                              width: 60,
-                              fit: BoxFit.cover,
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(topDoctorsList[index].name,style: const TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w800,
-                              ),),
-                              const SizedBox(height: 5,),
-                              Text(topDoctorsList[index].spec,style: const TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w500,
-                              ),),
-                              const SizedBox(height: 5,),
+                padding: const EdgeInsets.all(appPadding),
+                child: StreamBuilder(
+                    stream: topDoctorList,
+                    builder: (context, AsyncSnapshot snapshot) {
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                          itemCount: snapshot.data.docs.length,
+                          physics: const NeverScrollableScrollPhysics(),
+                          padding: const EdgeInsets.only(bottom: appPadding),
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            String doctorName=snapshot.data.docs[index].get("name");
+                            String doctorImage=snapshot.data.docs[index].get("image");
+                            String doctorSpecializedFields=snapshot.data.docs[index].get("specialized");
+                            String doctorRating=snapshot.data.docs[index].get("rating");
+                            String doctorReviews=snapshot.data.docs[index].get("reviews");
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: appPadding / 2),
+                              child: Container(
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  color: white,
+                                  borderRadius: BorderRadius.circular(20),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: black.withOpacity(0.3),
+                                        offset: const Offset(5, 5),
+                                        blurRadius: 10)
+                                  ],
+                                ),
+                                padding: const EdgeInsets.all(appPadding / 2),
+                                child: Row(
+                                  children: [
+                                    ClipRRect(
+                                      child:Image.network(doctorImage),
 
-                              Row(
-                                children: [
-                                  const Icon(Icons.star_rounded,color: Colors.yellow,size: 15,),
-                                  const SizedBox(width: 5,),
-                                  Text(topDoctorsList[index].rating.toString(),style: const TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w800,
-                                  ),),
-                                  const SizedBox(width: 10,),
 
-                                  Text("${topDoctorsList[index].reviews.toString()} Reviews",style: const TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w800,
-                                  ),),
-                                ],
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            )
+                                      // Image.asset(
+                                      //   topDoctorsList[index].image,
+                                      //   height: 80,
+                                      //   width: 60,
+                                      //   fit: BoxFit.cover,
+                                      // ),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                      "Dr $doctorName",
+                                          style: const TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                          doctorSpecializedFields,
+                                          style: const TextStyle(
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Icon(
+                                              Icons.star_rounded,
+                                              color: Colors.yellow,
+                                              size: 15,
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text(
+                                             doctorRating,
+                                              style: const TextStyle(
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.w800,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(
+                                              "$doctorReviews Reviews",
+                                              style: const TextStyle(
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.w800,
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      } else {
+                        return Center(child: const CircularProgressIndicator());
+                      }
+                    }))
           ],
         ),
       ),

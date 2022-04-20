@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "30215800175",
+    "project_id": "pcare-db5c5",
+    "storage_bucket": "pcare-db5c5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30215800175:android:4baabdc1884cec60a0d49a",
+        "android_client_info": {
+          "package_name": "com.example.palitive_care"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "30215800175-3qd31amj8fb12ljnmtudqqrfhjenr2nb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXj9WShz0BzUK5xEwEDph_FN6C9SDUvuA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "30215800175-3qd31amj8fb12ljnmtudqqrfhjenr2nb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
