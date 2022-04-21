@@ -6,5 +6,8 @@ class DatabaseServices{
   Future getDoctorList()async{
     return await _firestore.collection("doctors").snapshots();
   }
-  
+
+  Future getAvailableServices()async{
+    return await _firestore.collection("services").snapshots();
+  }
 }

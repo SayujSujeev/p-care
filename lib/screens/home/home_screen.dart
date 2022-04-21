@@ -72,7 +72,10 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             SizedBox(
               height: 120,
-              child: ListView.builder(
+              child:
+
+
+              ListView.builder(
                 itemCount: categoryList.length,
                 scrollDirection: Axis.horizontal,
                 physics: const BouncingScrollPhysics(),
@@ -161,134 +164,186 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SizedBox(
-              height: 175,
-              child: ListView.builder(
-                itemCount: todayDoctorList.length,
-                scrollDirection: Axis.horizontal,
-                physics: const BouncingScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(appPadding),
-                    child: Container(
-                      width: 300,
-                      decoration: BoxDecoration(
-                          color: white,
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: black.withOpacity(0.3),
-                              offset: const Offset(5, 5),
-                              blurRadius: 8,
-                            )
-                          ]),
-                      child: Padding(
-                        padding: const EdgeInsets.all(appPadding / 2),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                ClipRRect(
-                                  child: Image.asset(
-                                    todayDoctorList[index].image,
-                                    height: 45,
-                                    width: 45,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                                const SizedBox(
-                                  width: 15,
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+              height: 170,
+              child: StreamBuilder(
+                stream: topDoctorList,
+                builder:(context, AsyncSnapshot snapshot){
+                  if(snapshot.hasData){
+                    return ListView.builder(
+                      itemCount: snapshot.data.docs.length,
+                      scrollDirection: Axis.horizontal,
+                      physics: const BouncingScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        String doctorName=snapshot.data.docs[index].get("name");
+                        bool isAvailable=snapshot.data.docs[index].get("isAvailable");
+                        String doctorImage=snapshot.data.docs[index].get("image");
+                        String doctorSpecializedFields=snapshot.data.docs[index].get("specialized");
+                        String doctorRating=snapshot.data.docs[index].get("rating");
+                        String doctorReviews=snapshot.data.docs[index].get("reviews");
+                        return Visibility(
+                          visible: isAvailable,
+                          child: Padding(
+                            padding: const EdgeInsets.all(appPadding),
+                            child: Container(
+                              width: 300,
+                              decoration: BoxDecoration(
+                                  color: white,
+                                  borderRadius: BorderRadius.circular(20),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: black.withOpacity(0.3),
+                                      offset: const Offset(5, 5),
+                                      blurRadius: 8,
+                                    )
+                                  ]),
+                              child: Padding(
+                                padding: const EdgeInsets.all(appPadding / 2),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      todayDoctorList[index].name,
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                      ),
+                                    Row(
+                                      children: [
+                                        ClipRRect(
+                                          child:Image.network(doctorImage,
+                                              height: 90,
+                                              width: 90,
+                                              fit: BoxFit.cover,
+                                          ),
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        const SizedBox(
+                                          width: 15,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Dr $doctorName",
+                                              style: const TextStyle(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w800,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            Text(
+                                              doctorSpecializedFields,
+                                              style: const TextStyle(
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            Row(
+                                              children: [
+                                                const Icon(
+                                                  Icons.star_rounded,
+                                                  color: Colors.yellow,
+                                                  size: 15,
+                                                ),
+                                                const SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Text(
+                                                  doctorRating,
+                                                  style: const TextStyle(
+                                                    fontSize: 10,
+                                                    fontWeight: FontWeight.w800,
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(
+                                                  "$doctorReviews Reviews",
+                                                  style: const TextStyle(
+                                                    fontSize: 10,
+                                                    fontWeight: FontWeight.w800,
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        )
+                                      ],
                                     ),
                                     const SizedBox(
-                                      height: 5,
+                                      height: 20,
                                     ),
-                                    Text(
-                                      todayDoctorList[index].spec,
-                                      style: const TextStyle(
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
+                                    // Container(
+                                    //   height: 50,
+                                    //   width: double.infinity,
+                                    //   decoration: BoxDecoration(
+                                    //     color: black.withOpacity(0.25),
+                                    //     borderRadius: BorderRadius.circular(10),
+                                    //   ),
+                                    //   padding: const EdgeInsets.symmetric(
+                                    //       vertical: appPadding / 2,
+                                    //       horizontal: appPadding),
+                                    //   child: Row(
+                                    //     mainAxisAlignment:
+                                    //     MainAxisAlignment.spaceBetween,
+                                    //     children: [
+                                    //       Row(
+                                    //         children: [
+                                    //           const Icon(
+                                    //             Icons.calendar_today,
+                                    //             color: white,
+                                    //             size: 15,
+                                    //           ),
+                                    //           const SizedBox(
+                                    //             width: 5,
+                                    //           ),
+                                    //           Text(
+                                    //             todayDoctorList[index].date,
+                                    //             style: const TextStyle(
+                                    //               color: white,
+                                    //               fontSize: 12,
+                                    //             ),
+                                    //           )
+                                    //         ],
+                                    //       ),
+                                    //       Row(
+                                    //         children: [
+                                    //           const Icon(
+                                    //             Icons.access_time,
+                                    //             color: white,
+                                    //             size: 15,
+                                    //           ),
+                                    //           const SizedBox(
+                                    //             width: 5,
+                                    //           ),
+                                    //           Text(
+                                    //             todayDoctorList[index].date,
+                                    //             style: const TextStyle(
+                                    //               color: white,
+                                    //               fontSize: 12,
+                                    //             ),
+                                    //           )
+                                    //         ],
+                                    //       ),
+                                    //     ],
+                                    //   ),
+                                    // )
                                   ],
-                                )
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Container(
-                              height: 50,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: black.withOpacity(0.25),
-                                borderRadius: BorderRadius.circular(10),
+                                ),
                               ),
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: appPadding / 2,
-                                  horizontal: appPadding),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.calendar_today,
-                                        color: white,
-                                        size: 15,
-                                      ),
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(
-                                        todayDoctorList[index].date,
-                                        style: const TextStyle(
-                                          color: white,
-                                          fontSize: 12,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.access_time,
-                                        color: white,
-                                        size: 15,
-                                      ),
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(
-                                        todayDoctorList[index].date,
-                                        style: const TextStyle(
-                                          color: white,
-                                          fontSize: 12,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }else{
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                } ,
+              )
+
+
             ),
             const Padding(
               padding: EdgeInsets.only(left: appPadding),
