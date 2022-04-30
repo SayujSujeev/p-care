@@ -39,6 +39,8 @@ dependencies:
   cloud_firestore: ^2.2.0
   shared_preferences:
   get:
+  pay: ^1.0.8
+  url_launcher: ^6.1.0
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +70,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/images/
+    - assets/payment/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

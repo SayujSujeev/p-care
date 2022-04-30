@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:palitive_care/constants/constants.dart';
+import 'package:palitive_care/services/database_services.dart';
 
 
 class ChatInputField extends StatelessWidget {
+  final TextEditingController controller;
   const ChatInputField({
+    required this.controller,
     Key? key,
   }) : super(key: key);
 
@@ -49,31 +52,33 @@ class ChatInputField extends StatelessWidget {
                           .withOpacity(0.64),
                     ),
                     const SizedBox(width: appPadding / 4),
-                    const Expanded(
+                     Expanded(
                       child: TextField(
-                        decoration: InputDecoration(
+                        controller: controller,
+                        decoration: const InputDecoration(
                           hintText: "Type message",
                           border: InputBorder.none,
                         ),
                       ),
                     ),
-                    Icon(
-                      Icons.attach_file,
-                      color: Theme.of(context)
-                          .textTheme
-                          .bodyText1!
-                          .color!
-                          .withOpacity(0.64),
+                    InkWell(
+                      onTap: (){
+                        if(controller.text.isNotEmpty){
+                          DatabaseServices().sendMessage(message: controller.text);
+                          controller.clear();
+                        }
+                      },
+                      child: Icon(
+                        Icons.send,
+                        color: Theme.of(context)
+                            .textTheme
+                            .bodyText1!
+                            .color!
+                            .withOpacity(0.64),
+                      ),
                     ),
                     SizedBox(width: appPadding / 4),
-                    Icon(
-                      Icons.camera_alt_outlined,
-                      color: Theme.of(context)
-                          .textTheme
-                          .bodyText1!
-                          .color!
-                          .withOpacity(0.64),
-                    ),
+
                   ],
                 ),
               ),

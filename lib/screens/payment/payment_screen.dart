@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:palitive_care/constants/constants.dart';
-
+import 'package:pay/pay.dart';
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({Key? key}) : super(key: key);
 
@@ -9,8 +9,16 @@ class PaymentScreen extends StatefulWidget {
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
+  final _paymentItems = [
+    const PaymentItem(
+      label: 'Total',
+      amount: '99.99',
+      status: PaymentItemStatus.final_price,
+    )
+  ];
   @override
   Widget build(BuildContext context) {
+    Size size=MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: white,
@@ -30,24 +38,25 @@ class _PaymentScreenState extends State<PaymentScreen> {
           },
         ),
       ),
-      body: Center(
-        child:  Container(
-          padding: const EdgeInsets.symmetric(
-              horizontal: appPadding,
-              vertical: appPadding / 2),
-          decoration: BoxDecoration(
-            color: black,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: const Text(
-            'Google Pay',
-            style: TextStyle(
-              color: white,
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(
+          child: GooglePayButton(
+            height: 40,
+            width: size.width,
+            paymentConfigurationAsset: 'payment/payment.json',
+            paymentItems: _paymentItems,
+            style: GooglePayButtonStyle.black,
+            type: GooglePayButtonType.pay,
+            margin: const EdgeInsets.only(top: 15.0),
+            onPaymentResult: (result){
+              print(result);
+            },
+            loadingIndicator: const Center(
+              child: CircularProgressIndicator(),
             ),
-          ),
-        )
+          )
+        ),
       ),
     );
   }

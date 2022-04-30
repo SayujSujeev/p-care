@@ -7,19 +7,20 @@ import 'text_message.dart';
 import 'video_message.dart';
 
 class Message extends StatelessWidget {
+  final bool isSender;
   const Message({
     Key? key,
-    required this.message,
+    required this.isSender, required this.message,
   }) : super(key: key);
 
-  final ChatMessage message;
+  final String message;
 
   @override
   Widget build(BuildContext context) {
     Widget messageContaint(ChatMessage message) {
       switch (message.messageType) {
         case ChatMessageType.text:
-          return TextMessage(message: message);
+          return TextMessage(message: message, isSender: isSender,);
         case ChatMessageType.audio:
           return AudioMessage(message: message);
         case ChatMessageType.video:
@@ -33,17 +34,20 @@ class Message extends StatelessWidget {
       padding: const EdgeInsets.only(top: appPadding),
       child: Row(
         mainAxisAlignment:
-            message.isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
+            isSender? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
-          if (!message.isSender) ...[
+          if (isSender) ...[
             const CircleAvatar(
               radius: 12,
               backgroundImage: AssetImage("assets/images/user_2.png"),
             ),
             const SizedBox(width: appPadding / 2),
           ],
-          messageContaint(message),
-          if (message.isSender) MessageStatusDot(status: message.messageStatus)
+          messageContaint(ChatMessage(
+              text: message,
+              messageType: ChatMessageType.text,
+              messageStatus: MessageStatus.viewed, isSender: isSender)),
+          if (isSender) MessageStatusDot(status:MessageStatus.viewed)
         ],
       ),
     );

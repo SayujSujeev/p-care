@@ -4,9 +4,11 @@ import 'package:palitive_care/data/ChatMessage.dart';
 
 
 class TextMessage extends StatelessWidget {
+  final bool isSender;
   const TextMessage({
     Key? key,
     this.message,
+    required this.isSender
   }) : super(key: key);
 
   final ChatMessage? message;
@@ -23,7 +25,7 @@ class TextMessage extends StatelessWidget {
         borderRadius: BorderRadius.circular(30),
       ),
       child: Text(
-        message!.text,
+        message!.text.toString(),
         style: TextStyle(
           color: message!.isSender
               ? Colors.white

@@ -102,23 +102,23 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                     )
                                   ],
                                 ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: appPadding,
-                                      vertical: appPadding / 2),
-                                  decoration: BoxDecoration(
-                                    color: black,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: const Text(
-                                    'Book Now',
-                                    style: TextStyle(
-                                      color: white,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                )
+                                // Container(
+                                //   padding: const EdgeInsets.symmetric(
+                                //       horizontal: appPadding,
+                                //       vertical: appPadding / 2),
+                                //   decoration: BoxDecoration(
+                                //     color: black,
+                                //     borderRadius: BorderRadius.circular(10),
+                                //   ),
+                                //   child: const Text(
+                                //     'Book Now',
+                                //     style: TextStyle(
+                                //       color: white,
+                                //       fontSize: 15,
+                                //       fontWeight: FontWeight.w500,
+                                //     ),
+                                //   ),
+                                // )
                               ],
                             ),
                           ),
