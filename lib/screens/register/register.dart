@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:palitive_care/constants/constants.dart';
 import 'package:palitive_care/screens/home/home_screen.dart';
+import 'package:palitive_care/screens/login/login_screen.dart';
 import 'package:palitive_care/services/shared_preferance.dart';
 import 'package:get/get.dart';
 class RegisterScreen extends StatefulWidget {
@@ -76,7 +77,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: InkWell(
               onTap: ()async{
                 try{
-                  await _auth.signInWithEmailAndPassword(email:_emailController.text , password: _passwordController.text);
+                  await _auth.createUserWithEmailAndPassword(email: _emailController.text, password: _passwordController.text);
                   SharedPreferanceClass.saveUserLoggedInSharedPreference(true);
                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomeScreen(),),);
                 }
@@ -98,7 +99,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     color: black,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Text('Login',style: TextStyle(
+                  child: const Text('Register',style: TextStyle(
                     fontSize: 18,
                     color: white,
                     fontWeight: FontWeight.w800,
@@ -106,7 +107,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
             ),
           ),
+          const SizedBox(
+            height: 25,
+          ),
+          Center(child: InkWell(
+            onTap: (){
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginScreen(),),);
 
+            },
+            child: const Text("Login",style: TextStyle(fontSize: 18,fontWeight: FontWeight.w700,
+                decoration: TextDecoration.underline
+            ),),
+          ))
         ],
       ),
     );
